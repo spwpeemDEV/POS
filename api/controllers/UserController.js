@@ -3,20 +3,21 @@ const app = express();
 const Service = require("./Service");
 const UserModel = require("../models/UserModel");
 
-app.get("/user/list", async (req, res) => {
+app.get('/user/list', async (req, res) => {
   try {
-    const results = await UserModel.findAll({
-      where: {
-        userId: Service.getMemberId(req),
-      },
-      attributes: ["id", "name", "user"],
-      order: [["id", "DESC"]],
-    });
-    res.send({ message: "success", results: results });
+      const results = await UserModel.findAll({
+          where: {
+              userId: Service.getMemberId(req)
+          },
+          attributes: ['id', 'level', 'name', 'user'],
+          order: [['id', 'DESC']]
+      });
+      res.send({ message: 'success', results: results });
   } catch (e) {
-    res.status(500).send({ message: e.message });
+      res.statusCode = 500;
+      res.send({ message: e.message });
   }
-});
+})
 
 app.post("/user/insert", async (req, res) => {
   try {

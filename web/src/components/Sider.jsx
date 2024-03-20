@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
-import { InboxOutlined, FundOutlined, UserOutlined,DollarOutlined } from "@ant-design/icons";
+import {
+  InboxOutlined,
+  FundOutlined,
+  UserOutlined,
+  DollarOutlined,
+  BarsOutlined,
+  ProfileOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
 import Swal from "sweetalert2";
 import axios from "axios";
 import config from "../config";
@@ -74,6 +82,15 @@ const CustomSider = () => {
         </Menu.Item>
         <Menu.Item key="/user" icon={<UserOutlined />}>
           ผู้ใช้งานระบบ
+        </Menu.Item>
+        <Menu.Item key="/sumSalePerDay" icon={<ProfileOutlined />}>
+          สรุปยอดขายรายวัน
+        </Menu.Item>
+        <Menu.Item key="/billSales" icon={<BarsOutlined />}>
+          รายงานบิลขาย
+        </Menu.Item>
+        <Menu.Item key="/stock" icon={<HomeOutlined />}>
+          Stock สินค้า
         </Menu.Item>
       </Menu>
     </Sider>

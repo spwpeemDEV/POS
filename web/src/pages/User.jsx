@@ -25,6 +25,7 @@ function User() {
         config.api_path + "/user/list",
         config.headers()
       );
+      console.log(res.data); // ล็อกค่าที่ได้จากการ GET ข้อมูลผู้ใช้
       if (res.data.message === "success") {
         setUsers(res.data.results);
       }
@@ -36,6 +37,7 @@ function User() {
       });
     }
   };
+  
 
   const showModal = () => {
     clearForm();
@@ -194,6 +196,7 @@ function User() {
       });
     }
   };
+  
 
   return (
     <CustomLayout title="ผู้ใช้งานระบบ">

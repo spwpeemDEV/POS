@@ -8,6 +8,8 @@ import Product from "./pages/Product.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import User from "./pages/User.jsx";
 import Sale from "./pages/Sale.jsx";
+import BillSales from "./pages/BillSales.jsx";
+import SumSalePerDay from "./pages/SumSalePerDay.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: <User />,
+  },
+  {
+    path: "/billSales",
+    element: <BillSales />,
+  },
+  {
+    path: "/sumSalePerDay",
+    element: <SumSalePerDay />,
   },
 ]);
 

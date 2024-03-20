@@ -207,4 +207,98 @@ app.get("/billSale/billToday", async (req, res) => {
   res.send({ message: "success", results: results });
 });
 
+app.get("/billSale/list", async (req, res) => {
+  const BillSaleDetailModel = require("../models/BillSaleDetailModel");
+  const ProductModel = require("../models/ProductModel");
+
+  BillSaleModel.hasMany(BillSaleDetailModel);
+  BillSaleDetailModel.belongsTo(ProductModel);
+
+  try {
+    const results = await BillSaleModel.findAll({
+      order: [["id", "DESC"]],
+      where: {
+        status: "pay",
+      },
+      include: {
+        model: BillSaleDetailModel,
+        include: {
+          model: ProductModel,
+        },
+      },
+    });
+    res.send({ message: "success", results: results });
+  } catch (e) {
+    res.status(500).send({ message: e.message });
+  }
+});
+
+app.get("/billSale/listByYearAndMonth/:year/:month", async (req, res) => {
+  try {
+    let arr = [];
+    let y = req.params.year;
+    let m = req.params.month;
+    let daysInMonth = new Date(y, m, 0).getDate();
+
+    const { Sequelize } = require("sequelize");
+    const Op = Sequelize.Op;
+    const BillSaleDetailModel = require("../models/BillSaleDetailModel");
+    const ProductModel = require("../models/ProductModel");
+
+    BillSaleModel.hasMany(BillSaleDetailModel);
+    BillSaleDetailModel.belongsTo(ProductModel);
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const results = await BillSaleModel.findAll({
+        where: {
+          [Op.and]: [
+            Sequelize.fn(
+              'EXTRACT(YEAR from "billSaleDetails"."createdAt") = ',
+              y
+            ),
+            Sequelize.fn(
+              'EXTRACT(MONTH from "billSaleDetails"."createdAt") = ',
+              m
+            ),
+            Sequelize.fn(
+              'EXTRACT(DAY from "billSaleDetails"."createdAt") = ',
+              i
+            ),
+          ],
+          userId: Service.getMemberId(req),
+        },
+        include: {
+          model: BillSaleDetailModel,
+          include: {
+            model: ProductModel,
+          },
+        },
+      });
+
+      let sum = 0;
+
+      for (let j = 0; j < results.length; j++) {
+        const result = results[j];
+
+        for (let k = 0; k < result.billSaleDetails.length; k++) {
+          const item = result.billSaleDetails[k];
+
+          sum += parseInt(item.qty) * parseInt(item.price);
+        }
+      }
+
+      arr.push({
+        day: i,
+        results: results,
+        sum: sum,
+      });
+    }
+
+    res.send({ message: "success", results: arr });
+  } catch (e) {
+    res.statusCode = 500;
+    res.send({ message: e.message });
+  }
+});
+
 module.exports = app;
